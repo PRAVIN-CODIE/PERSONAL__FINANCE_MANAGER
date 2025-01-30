@@ -1,0 +1,31 @@
+package com.finance.service;
+
+import com.finance.model.Transaction;
+import com.finance.repository.TransactionRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class FinanceService {
+
+    private final TransactionRepository transactionRepository;
+
+    public FinanceService(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
+    }
+
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll();
+    }
+
+    public void saveTransaction(Transaction transaction) {
+        transactionRepository.save(transaction);
+    }
+
+    public List<Transaction> getTransactionsByCategory(String category) {
+        return transactionRepository.findAll().stream()
+            .filter(t -> t.getCategory().equalsIgnoreCase(category))
+            .toList();
+    }
+}
