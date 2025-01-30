@@ -1,0 +1,40 @@
+package com.finance.controller;
+
+import com.finance.model.Transaction;
+import com.finance.service.FinanceService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Controller
+@RequestMapping("/")
+public class FinanceController {
+
+    private final FinanceService financeService;
+
+    public FinanceController(FinanceService financeService) {
+        this.financeService = financeService;
+    }
+
+    @GetMapping
+    public String home(Model model) {
+        List<Transaction> transactions = financeService.getAllTransactions();
+        model.addAttribute("transactions", transactions);
+        return "index";
+    }
+
+    @GetMapping("/expense-form")
+    public String showExpenseForm(Model model) {
+        model.addAttribute("transaction", new Transaction());
+        return "expenseForm";
+    }
+
+    @PostMapping("/add-transaction")
+    public String addTransaction(@ModelAttribute Transaction transaction) {
+        financeService.saveTransaction(transaction);
+        return "redirect:/";
+    }
+}
